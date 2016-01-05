@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emopicture.persistence.RefBoardMapper">
+
+	
+	<resultMap type="com.emopicture.domain.RefBoardVO" id="resultset"></resultMap>
+	
+	<select id="listpage" resultMap="resultset">
+	<![CDATA[
+		select * from (select bno, mno, title,content, nickname, regdate, updatedate, viewcnt, attyn, rownum rn from (select * from tbl_board order by bno desc) where rownum <= (#{page}* #{perPageNum) where rn> ((#{page}-1))*#{perPageNum}
+		]]>  	
+	</select>
+	
+	<select id="search" resultType="com.emopicture.domain.RefBoardVO">
+		<![CDATA[
+			select * 
+			from
+			(
+			  select /*+index_desc(tbl_refboard ref_pk_bno)*/
+			  rownum rn, bno, title, content, nickname, viewcnt, replycnt 
+			  from tbl_refboard
+			  where bno > 0
+			]]>
+				<if test="searchType == 't'.toString()">
+					and title like '%'||#{keyword}||'%'
+				</if>			
+	 		<![CDATA[
+			  and rownum <= #{pageNo} * #{perPage}
+			)
+			where rn> (#{pageNo} - 1) * #{perPage}
+			]]>
+	</select>	
+	
+	
+	<insert id="create">
+		insert into tbl_refboard (bno, title, content, nickname)
+		values (seq_refboard.nextval, #{title},#{content},#{nickname})
+	</insert>
+	
+	<select id="read" resultType="com.emopicture.domain.RefBoardVO">
+		select * from tbl_refboard where bno = #{bno}
+	</select>
+	
+	<update id="update">
+		update tbl_refboard set title = #{title}, content = #{content}, nickname = #{nickname} where bno=#{bno}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_refboard where bno = #{bno}
+	</delete>
+	
+	<update id="viewcnt">
+		update tbl_refboard set viewcnt = viewcnt+1 where bno = #{bno}
+	</update>
+	
+	<select id="totalcount" resultType="int">
+		select count(*) from tbl_refboard
+	</select>
+	
+		
+	<update id="updatereply">
+		update tbl_refboard set replycnt = (select count(rno) 
+		from tbl_refreply where bno = #{bno}) where bno = #{bno}
+	</update>
+	
+	
+	<insert id="addAttach">
+		insert into tbl_attach(fullname, bno)values (#{fullname}, seq_refboard.currval)
+	</insert>
+	
+	<select id="getAttach" resultType="string">
+	select fullname from tbl_attach where bno = #{bno} order by regdate
+	 </select>
+	
+
+</mapper>

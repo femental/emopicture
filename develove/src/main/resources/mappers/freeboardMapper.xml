@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emopicture.persistence.FreeBoardMapper">
+
+	
+	<resultMap type="com.emopicture.domain.FreeBoardVO" id="resultset"></resultMap>
+	
+	
+  <sql id="cri">
+	<if test="searchType == 't'.toString()">
+		and title like '%'||#{keyword}||'%'
+	</if>
+	<if test="searchType == 'w'.toString()">
+		and nickname like '%'||#{keyword}||'%'
+	</if>
+	<if test="searchType == 'c'.toString()">
+		and content like '%'||#{keyword}||'%'
+	</if>
+	<if test="searchType == 'tc'.toString()">
+		and (title like '%'||#{keyword}||'%' or content like '%'||#{keyword}||'%')
+	</if>
+	<if test="searchType == 'cw'.toString()">
+		and (content like '%'||#{keyword}||'%' or nickname like '%'||#{keyword}||'%') 
+	</if>
+	<if test="searchType == 'tcw'.toString()">
+		and (title like '%'||#{keyword}||'%' or content like '%'||#{keyword}||'%' or nickname like '%'||#{keyword}||'%') 
+	</if>	
+</sql>
+	
+	<select id="listpage" resultMap="resultset">
+	<![CDATA[
+		select * from (select bno,title,content, regdate, updatedate, hit,rownum rn from (select * from tbl_freeboard order by bno desc) where rownum <= (#{page}* #{perPageNum) where rn> ((#{page}-1))*#{perPageNum}
+		]]>  	
+	</select>
+	
+	<select id="search" resultType="com.emopicture.domain.FreeBoardVO">
+		<![CDATA[
+			select * 
+			from
+			(
+			  select /*+index_desc(tbl_freeboard free_pk_bno)*/
+			  rownum rn, bno, title, nickname, viewcnt ,replycnt,regdate
+			  from tbl_freeboard
+			  where bno > 0
+			]]>
+				<include refid="cri"></include>		
+					
+	 		<![CDATA[
+			  and rownum <= #{pageNo} * #{perPage}
+			)
+			where rn> (#{pageNo} - 1) * #{perPage}
+			]]>
+	</select>	
+	
+	
+	<insert id="create">
+		insert into tbl_freeboard (bno, title, content,mno,nickname) values (seq_free.nextval, #{title}, #{content}, #{mno},#{nickname})
+	</insert>
+	
+	<select id="read" resultType="com.emopicture.domain.FreeBoardVO">
+		select * from tbl_freeboard  where bno=#{bno}
+	</select>
+	
+	<update id="update">
+		update tbl_freeboard  set title = #{title}, content = #{content}, nickname=#{nickname},mno=#{mno}, updatedate = sysdate where bno=#{bno}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_freeboard  where bno = #{bno}
+	</delete>
+	
+	<update id="viewcnt">
+		update tbl_freeboard  set viewcnt=viewcnt+1 where bno = #{bno}
+	</update>
+	
+	<select id="totalcount" resultType="int">
+		select count(*) from tbl_freeboard 
+	</select>
+	
+	<update id="updatereply">
+		update tbl_freeboard  set replycnt = (select count(rno) 
+		from tbl_freereply where bno = #{bno}) where bno = #{bno}
+	</update>	
+	
+	<select id="listSearchCount" resultType="int">
+	<![CDATA[
+		select count(*) from tbl_freeboard where bno > 0
+	]]>
+	<include refid="cri"></include>
+	</select>
+	
+	
+
+</mapper>
+

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emopicture.persistence.FreeReplyMapper">
+
+	
+	<select id="list" resultType="com.emopicture.domain.ReplyVO">
+		select * from tbl_freereply where bno = #{bno} order by rno desc
+	</select>
+	
+	<insert id="create">
+		insert into tbl_freereply (rno, bno, replytext, replyer) values (seq_free.nextval,#{bno},#{replytext},#{replyer})
+	</insert>
+	
+	<update id="update">
+		update tbl_freereply set replytext=#{replytext} where rno = #{rno}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_freereply where rno = #{rno}
+	</delete>
+	
+	<select id="count" resultType="int">
+		select count(*) from tbl_freereply where bno = #{bno}
+	</select>
+	
+	<select id="listPage" resultType="com.emopicture.domain.ReplyVO">
+	
+			select * 
+			from
+			(
+			  select /*+index_desc(tbl_freereply free_pk_bno)*/
+			  rownum rn, rno, bno, replytext, replyer, regdate
+			  from tbl_freereply
+			  where bno = #{bno}
+			)
+			where rn between (#{cri.pageNo}-1)*#{cri.perPageNum} and #{cri.pageNo}*#{cri.perPageNum}
+			order by rno desc
+	
+	</select>
+	
+	
+	
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emopicture.persistence.QnaBoardMapper">
+
+
+	<resultMap type="com.emopicture.domain.QnaBoardVO" id="resultset"></resultMap>
+
+	<select id="listpage" resultMap="resultset">
+	<![CDATA[
+		select * from (select bno,title,mcontent, mno, nickname, replycnt, regdate, updatedate, hit,rownum rn from (select * from tbl_qnaboard order by bno desc) where rownum <= (#{page}* #{perPageNum) where rn> ((#{page}-1))*#{perPageNum}
+		]]>
+	</select>
+
+	<select id="search" resultType="com.emopicture.domain.QnaBoardVO">
+		<![CDATA[
+			select * 
+			from
+			(
+			  select /*+index_desc(tbl_qnaboard qna_pk_bno)*/
+			  rownum rn, bno, title, mno, nickname, email, content, viewcnt, regdate, answeryn, replycnt
+			  from tbl_qnaboard
+			  where bno > 0
+			]]>
+		<if test="searchType == 't'.toString()">
+			and title like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and nickname like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and content like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			and title like '%'||#{keyword}||'%' or content like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			and content like '%'||#{keyword}||'%' or nickname like '%'||#{keyword}||'%'  
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and title like '%'||#{keyword}||'%' or content like '%'||#{keyword}||'%' or nickname like '%'||#{keyword}||'%'
+		</if>	
+	 		<![CDATA[
+			  and rownum <= #{pageNo} * #{perPage}
+			)
+			where rn> (#{pageNo} - 1) * #{perPage}
+			]]>
+	</select>
+
+
+	<insert id="create">
+		insert into tbl_qnaboard (bno, title, mno, nickname,
+		email, content) values (seq_qnaboard.nextval, #{title},#{mno},
+		#{nickname}, #{email}, #{content})
+	</insert>
+
+	<select id="read" resultType="com.emopicture.domain.QnaBoardVO">
+		select * from tbl_qnaboard where
+		bno=#{bno}
+	</select>
+
+	<update id="update">
+		update tbl_qnaboard set title = #{title}, content =
+		#{content}, updatedate = sysdate where bno = #{bno}
+	</update>
+
+	<delete id="delete">
+		delete from tbl_qnaboard where bno = #{bno}
+	</delete>
+
+	<update id="hit">
+		update tbl_qnaboard set viewcnt = viewcnt + 1 where
+		bno = #{bno}
+	</update>
+
+	<select id="totalcount" resultType="int">
+		select count(*) from
+		tbl_qnaboard
+	</select>
+
+	<update id="updateansweryn">
+		update tbl_qnaboard set answeryn = 'yes', answerdate
+		= sysdate where bno = #{bno}
+	</update>
+
+	<update id="updatereplycnt">
+		update tbl_qnaboard set replycnt = (select count(rno)
+		from tbl_qnareply where bno = #{bno}) where bno = #{bno}
+	</update>
+
+	<insert id="addAttach">
+		insert into tbl_qnaattach(fullname, bno) values (#{fullName}, seq_qnaboard.currval)
+	</insert>
+	
+	<select id="getAttach" resultType="string">
+		select fullname from tbl_qnaattach where bno = #{bno} order by regdate desc
+	</select>
+	
+	<delete id="deleteAttach">
+		delete from tbl_qnaattach where bno = #{bno}
+	</delete>
+	
+	<insert id="replaceAttach">
+		insert into tbl_qnaattach(fullname, bno) values (#{fullname},  #{bno})
+	</insert>
+</mapper>
+
