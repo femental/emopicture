@@ -10,7 +10,7 @@
 	
 	<select id="listpage" resultMap="resultset">
 	<![CDATA[
-		select * from (select bno, mno, title,content, nickname, regdate, updatedate, viewcnt, attyn, rownum rn from (select * from tbl_board order by bno desc) where rownum <= (#{page}* #{perPageNum) where rn> ((#{page}-1))*#{perPageNum}
+		select * from (select bno,title, content, mno, nickname, replycnt, regdate, updatedate, viewcnt,rownum rn from (select * from tbl_refboard order by bno desc) where rownum <= (#{page}* #{perPageNum) where rn> ((#{page}-1))*#{perPageNum}
 		]]>  	
 	</select>
 	
@@ -20,13 +20,28 @@
 			from
 			(
 			  select /*+index_desc(tbl_refboard ref_pk_bno)*/
-			  rownum rn, bno, title, content, nickname, viewcnt, replycnt 
+			  rownum rn, bno, title, content, nickname, viewcnt, replycnt, regdate 
 			  from tbl_refboard
 			  where bno > 0
 			]]>
-				<if test="searchType == 't'.toString()">
-					and title like '%'||#{keyword}||'%'
-				</if>			
+		<if test="searchType == 't'.toString()">
+			and title like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and nickname like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and content like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			and title like '%'||#{keyword}||'%' or content like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			and content like '%'||#{keyword}||'%' or nickname like '%'||#{keyword}||'%'  
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and title like '%'||#{keyword}||'%' or content like '%'||#{keyword}||'%' or nickname like '%'||#{keyword}||'%'
+		</if>			
 	 		<![CDATA[
 			  and rownum <= #{pageNo} * #{perPage}
 			)

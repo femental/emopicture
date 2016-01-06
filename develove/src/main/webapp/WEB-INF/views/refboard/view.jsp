@@ -95,7 +95,15 @@ pageEncoding="UTF-8"%>
     		</div>    		
     	</div>
     	
+    	
+    	<ul class="mailbox-attachments clearfix uploadedList"></ul>
+    	
+    	
+    	
+    	
       		<hr align="center" style="border:solid 1px #CCCCCC; width:90%;margin-top:-25px;"> 
+      		
+      		
       		
   <!-- 댓글부분 -->
 		<div style="margin-top:-10px;margin-left: 4%; width:80%;">
@@ -133,6 +141,18 @@ pageEncoding="UTF-8"%>
 
 </div>
 <!-- /.content -->
+
+
+<!-- 글쓰기/수정/삭제/목록 버튼 -->
+<div align="right" style="width:70%;margin-left:15%;margin-top:10px; background-color:#fff;">
+	<form id="viewform" >
+    	<input type="hidden" name="bno" value="${board.bno}">
+        <a href="/refboard/create"><input type="button" value="글쓰기"></a>
+        <input id="mod" type="button" value="수정">
+        <input id="del" type="button" value="삭제">
+        <input id="list" type="button" value="목록">
+	</form>
+</div>
 
 <!-- THUMBNAIL MODAL -->
 <div class='popup back' style="display:none;"></div>

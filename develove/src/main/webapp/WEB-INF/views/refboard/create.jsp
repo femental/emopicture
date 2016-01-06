@@ -9,7 +9,10 @@
 .form-group{
 	width:70%;
 	margin-left:15%;
-
+}
+ul{
+	list-style:none;
+	padding-left:0px;
 }
 
 </style>
@@ -37,18 +40,18 @@
 						<label for="exampleInputEamil1">Title</label> 
 						<input type="text" name='title' class="form-control" placeholder="Title">
 					</div>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label for="exampleInputEamil1">Mno</label> 
 						<input type="text" name='mno' class="form-control" placeHolder="MNO">
-					</div>
+					</div> -->
 					<div class="form-group">
 						<label for="exampleInputEamil1">Writer</label> 
 						<input type="text" name='nickname' class="form-control" placeholder="Writer">
 					</div>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label for="exampleInputEamil1">E-mail</label> 
 						<input type="text" name='email' class="form-control" placeholder="E-mail">
-					</div>
+					</div> -->
 					<div class="form-group">
 						<label for="exampleInputPassword1">Content</label> 
 						<input 	type="text" name='content' class="form-control" style="height: 200px" placeholder="Content">

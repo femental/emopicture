@@ -50,11 +50,11 @@ public class RefBoardController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String createPost(QnaBoardVO vo) throws Exception {
+	public String createPost(RefBoardVO vo) throws Exception {
 		System.out.println(vo.getTitle());
 		System.out.println(vo.getFiles());
 		bService.create(vo);
-		return "redirect:/qnaboard/list";
+		return "redirect:/refboard/list";
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.GET)
