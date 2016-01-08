@@ -50,7 +50,7 @@ pageEncoding="UTF-8"%>
             z-index:500;
         }
     </style>
-<!--     <style type="text/css">
+     <style type="text/css">
     	.popup{
     		position:absolute;
     	}
@@ -62,13 +62,19 @@ pageEncoding="UTF-8"%>
     		overflow:hidden;
     		z-index:1101;
     	}
-    	.front{
-    		position:relative;
-    		max-width: 1200px;
-    		max-height:800px;
-    		overflow: auto;
-    	} 
-    </style>-->
+    	.front { 
+       	z-index:1110; 
+       	opacity:1; 
+       	boarder:1px; 
+       	margin: auto; 
+      }
+    	.show{
+       position:relative;
+       max-width: 1200px; 
+       max-height: 800px; 
+       overflow: auto;       
+     } 
+    </style>
     <!-- Main content -->
     <div class="content" style="width:70%;margin-left:15%;border:solid 1px #CCCCCC;">
     	
@@ -86,7 +92,7 @@ pageEncoding="UTF-8"%>
     			<h5 style="">작성자:&nbsp;${board.nickname}</h5>
     		</div>
     		<div style="margin-top:-45px;">
-    			<h6 align="right" style="margin-right:5%">댓글수:${board.replycnt}&nbsp;|&nbsp;조회수:${board.viewcnt}</h6>
+    			<h6 id='replycntSmall' align="right" style="margin-right:5%">댓글수:${board.replycnt}&nbsp;|&nbsp;조회수:${board.viewcnt}</h6>
     		</div>
     	</div>
         <div>
@@ -171,22 +177,26 @@ pageEncoding="UTF-8"%>
 
   <ul class='pagination'></ul>
 
-<div id="modDiv" class="modal " style="display: none;">
+
+
+<div id="modDiv" class="modal" style="display: none;">
    <div class="modal-title"></div>
    <div>
       <textarea rows="0" cols="0" type="text" id="replytext" onpaste="return" style="width: 100%;height:50px;"></textarea>
    </div>
+   
    <div>
       <button type="button" id="replyModBtn">수정</button>
       <button type="button" id="replyDelBtn">삭제</button>
       <button type="button" id="closeBtn" >닫기</button>
    </div>
 </div>
-
+ 
 
 
 
    <!-- HANDLEBARS -->
+<script type="text/javascript" src="/resources/js/upload.js"></script>   
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
@@ -358,12 +368,40 @@ pageEncoding="UTF-8"%>
 			    $("#mod").on("click", function(){
 			        target.action="/refboard/modify";
 			        target.submit();
+			        
 			    });
-			    $("#del").on("click", function(){
+			    /* $("#del").on("click", function(){
 			        target.action="/refboard/delete";
 			        target.method="post";
 			        target.submit();
-			    }); 
+			        
+			    }); */ 
+			    $("#del").on("click", function(){
+					
+					var replyCnt =  $("#replycntSmall").html();
+					
+					if(replyCnt > 0 ){
+						
+						alert("댓글이 달린 게시물을 삭제할 수 없습니다.");
+						return;
+					}	
+					
+					var arr = [];
+					$(".uploadedList li").each(function(index){
+						 arr.push($(this).attr("data-src"));
+					});
+					
+					if(arr.length > 0){
+						$.post("/deleteAllFiles",{files:arr}, function(){
+							
+						});
+					}
+					
+					target.action="/refboard/deletePage"
+					target.method="post";
+					//target.attr("action","/refboard/list").submit();
+					target.submit();
+				});	
 			
 			    
 			    

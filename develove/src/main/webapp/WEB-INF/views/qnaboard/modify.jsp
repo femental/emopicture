@@ -55,7 +55,7 @@
 							<hr>
 						</div>
 						<button type="submit" class="btn btn-primary">수정</button>
-						<button type="submit" class="btn btn-warning">취소</button>
+						<button id="cancel" type="button" class="btn btn-primary">취소</button>
 					</div>
 		
 	</form>

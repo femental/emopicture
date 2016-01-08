@@ -33,14 +33,31 @@ public class RefBoardServiceImpl implements RefBoardService<RefBoardVO, Integer>
 		return mapper.read(bno);
 	}
 
+	@Transactional
 	@Override
 	public void delete(Integer bno) throws Exception {
+		mapper.deleteAttach(bno);
 		mapper.delete(bno);
 	}
 
+	@Transactional
 	@Override
 	public void update(RefBoardVO vo) throws Exception {
 		mapper.update(vo);
+		
+		Integer bno = vo.getBno();
+
+		mapper.deleteAttach(bno);
+
+		String[] files = vo.getFiles();
+
+		if (files == null) {
+			return;
+		}
+
+		for (String fileName : files) {
+			mapper.replaceAttach(fileName, bno);
+		}
 	}
 
 	@Override
@@ -67,6 +84,12 @@ public class RefBoardServiceImpl implements RefBoardService<RefBoardVO, Integer>
 		
 	}
 
+	@Override
+	public List<String> getAttach(Integer bno) throws Exception {
+		
+		return mapper.getAttach(bno);
+	}
+	
 	@Transactional
 	@Override
 	public void create(RefBoardVO vo) throws Exception {
@@ -79,12 +102,9 @@ public class RefBoardServiceImpl implements RefBoardService<RefBoardVO, Integer>
 		}
 		
 	}
+	
+	
 
-	@Override
-	public List<String> getAttach(Integer bno) throws Exception {
-
-		return mapper.getAttach(bno);
-	}
 
 
 

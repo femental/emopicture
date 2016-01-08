@@ -1,11 +1,13 @@
 package com.emopicture.persistence;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.emopicture.domain.RefBoardVO;
 import com.emopicture.domain.Criteria;
+import com.emopicture.domain.RefBoardVO;
 
 @Repository
 public class RefBoardMapperImpl extends AbstractCRUDMapper<RefBoardVO, Integer> implements RefBoardMapper {
@@ -56,6 +58,23 @@ public class RefBoardMapperImpl extends AbstractCRUDMapper<RefBoardVO, Integer> 
 	public List<String> getAttach(Integer bno) throws Exception {
 		
 		return session.selectList(namespace+".getAttach", bno);
+	}
+
+	@Override
+	public void deleteAttach(Integer bno) throws Exception {
+		session.delete(namespace+".deleteAttach", bno);
+		
+	}
+
+	@Override
+	public void replaceAttach(String fullName, Integer bno) throws Exception {
+		 Map<String, Object> paramMap = new HashMap<String, Object>();
+		    
+		    paramMap.put("bno", bno);
+		    paramMap.put("fullName", fullName);
+		    
+		    session.insert(namespace+".replaceAttach", paramMap);
+		
 	}
 
 

@@ -82,6 +82,7 @@
 	</update>
 	
 	
+	<!-- 파일첨부 부분 -->
 	<insert id="addAttach">
 		insert into tbl_attach(fullname, bno)values (#{fullname}, seq_refboard.currval)
 	</insert>
@@ -89,6 +90,15 @@
 	<select id="getAttach" resultType="string">
 	select fullname from tbl_attach where bno = #{bno} order by regdate
 	 </select>
+
+	<delete id="deleteAttach">
+	delete from tbl_attach where bno=#{bno}
+	</delete>
+
+	<update id="replaceAttach">
+		update tbl_attach set fullname = #{fullname}
+		where bno = #{bno}
+	</update>
 	
 
 </mapper>

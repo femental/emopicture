@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.emopicture.domain.BoardVO;
 import com.emopicture.domain.Criteria;
-import com.emopicture.domain.QnaBoardVO;
 import com.emopicture.domain.RefBoardVO;
 import com.emopicture.service.RefBoardService;
 
@@ -57,7 +59,7 @@ public class RefBoardController {
 		return "redirect:/refboard/list";
 	}
 
-	@RequestMapping(value = "/modify", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/modify", method = RequestMethod.GET)
 	public void modify(int bno, Model model) throws Exception {
 		System.out.println(bno);
 		model.addAttribute("board", bService.read(bno));
@@ -66,13 +68,44 @@ public class RefBoardController {
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	public String modifyPost(RefBoardVO vo) throws Exception {
 		bService.update(vo);
+		
 		return "redirect:/refboard/list";
+	}*/
+	
+	@RequestMapping(value = "/modify", method = RequestMethod.GET)
+	   public void modifyPage(int bno, @ModelAttribute("cri") Criteria cri, Model model ) throws Exception {
+		   System.out.println(bno);
+
+	      model.addAttribute("board", bService.read(bno));
+	   }
+	   
+	   
+	   @RequestMapping(value = "/modify", method = RequestMethod.POST)
+	   public String modifyPOSTPage(RefBoardVO vo, Criteria cri, RedirectAttributes rttr) throws Exception {
+		   		   
+		   bService.update(vo);
+		   rttr.addAttribute("pageNo", cri.getPageNo());
+		   rttr.addAttribute("perPageNum", cri.getPerPageNum());
+		   rttr.addAttribute("searchType", cri.getSearchType());
+		   rttr.addAttribute("keyword", cri.getKeyword());
+		   rttr.addFlashAttribute("msg","SUCCESS");
+		   
+		   
+		   return "redirect:/refboard/list";
+	   }
+	
+
+	@RequestMapping(value = "/deletePage", method = RequestMethod.POST)
+	public String deletePage(@RequestParam("bno") int bno, RedirectAttributes rttr) throws Exception {
+		
+		try{
+		bService.delete(bno);
+		rttr.addFlashAttribute("msg","delete complete");
+		
+	} catch(Exception e){
+		e.printStackTrace();
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public String delete(int bno) throws Exception {
-		bService.delete(bno);
-		System.out.println("delete complete");
 		return "redirect:/refboard/list";
 	}
 	

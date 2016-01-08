@@ -31,10 +31,10 @@ ul{
 
 	<!-- Main content -->
 	<section class="content" style="width:70%;margin-left:15%;">
-		<div class="box-body">
+				<form id="registerForm" role="form" method="post">
+					<div class="box-body">
 					<div class="form-group">
-						<form id="registerForm" role="form" method="post">
-						<input type="hidden" name="bno" value="${board.bno}">
+					<input type="hidden" name="bno" value="${board.bno}">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputEamil1">Title</label> 
@@ -68,9 +68,11 @@ ul{
 	
 					<div class="box-footer" align="center">
 						<div>
-							<hr  style="width:70%;margin-left:15%;">
+							<hr style="width:70%;margin-left:15%;">
 						</div>
 						<button type="submit" class="btn btn-primary">등록</button>
+						<a href="/refboard/list"><input type="button" class="btn btn-primary" value="취소" /></a>
+						
 					</div><br><br>
 		
 </form>
@@ -81,8 +83,11 @@ ul{
 
 <%@include file="../include/footer.jsp"%>
 
+
+
+
    <!-- HANDLEBARS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
 <script id="template" type="text/x-handlebars-template">
 <li>
   <span class="mailbox-attachment-icon has-img"><img src="{{imgsrc}}" alt="Attachment"></span>
@@ -95,9 +100,6 @@ ul{
 </li>                
 </script> 
 <script>
-
-	
-
 	
 	var template = Handlebars.compile($("#template").html());
 	
@@ -165,6 +167,33 @@ ul{
 		   }
 	   });
 	});
+	
+	$(".uploadedList").on("click", ".mailbox-attachment-info a", function(event){
+		
+		var fileLink = $(this).attr("href");
+		
+		if(checkImageType(fileLink)){
+			
+			event.preventDefault();
+					
+			var imgTag = $("#popup_img");
+			imgTag.attr("src", fileLink);
+			
+			console.log(imgTag.attr("src"));
+					
+			$(".popup").show('slow');
+			imgTag.addClass("show");		
+		}	
+	});
+
+	$("#popup_img").on("click", function(){
+		
+		$(".popup").hide('slow');
+		
+	});	
+		
+	
+
 	
 
 </script>

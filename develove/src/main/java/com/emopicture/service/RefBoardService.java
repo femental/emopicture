@@ -3,6 +3,7 @@ package com.emopicture.service;
 import java.util.List;
 
 import com.emopicture.domain.Criteria;
+import com.emopicture.domain.RefBoardVO;
 
 public interface RefBoardService<V, K>{
 
@@ -28,5 +29,7 @@ public interface RefBoardService<V, K>{
    public void attyn(K key)throws Exception;
    
    public List<String> getAttach(Integer bno)throws Exception;
+
+   
    
 }
