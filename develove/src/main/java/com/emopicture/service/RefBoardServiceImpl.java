@@ -44,9 +44,10 @@ public class RefBoardServiceImpl implements RefBoardService<RefBoardVO, Integer>
 	@Override
 	public void update(RefBoardVO vo) throws Exception {
 		mapper.update(vo);
-		
+		System.out.println(vo);
+		System.out.println("첨부파일+글 수정 호출됨..");
 		Integer bno = vo.getBno();
-
+System.out.println("★......................."+bno);
 		mapper.deleteAttach(bno);
 
 		String[] files = vo.getFiles();

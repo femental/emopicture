@@ -91,7 +91,8 @@ public class RefBoardController {
 		   rttr.addFlashAttribute("msg","SUCCESS");
 		   
 		   
-		   return "redirect:/refboard/list";
+		   /*return "redirect:/refboard/list";*/
+		   return "redirect:/refboard/view?bno="+vo.getBno();
 	   }
 	
 

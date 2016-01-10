@@ -96,9 +96,10 @@
 	</delete>
 
 	<update id="replaceAttach">
-		update tbl_attach set fullname = #{fullname}
-		where bno = #{bno}
+		update tbl_attach set fullname = #{fullname, jdbcType=VARCHAR} where bno = #{bno}
 	</update>
+	
+	
 	
 
 </mapper>

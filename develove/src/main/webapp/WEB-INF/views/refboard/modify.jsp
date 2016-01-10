@@ -29,7 +29,7 @@ ul{
 
    <!-- Main content -->
    
-    <section class="content" style="margin-left:20%">
+    <section class="content" style="width:70%;margin-left:15%;">
     
       <form action="modify" role="form"  method="post">
       
@@ -40,23 +40,23 @@ ul{
  					
 		<div class="box-body">
 		
-					<div class="form-group" style="width: 70%;">
+					<div class="form-group">
  						<input type="hidden" name="bno" class="form-control" value="${board.bno}">
 					</div>
 					
-					<div class="form-group" style="width: 70%;">
+					<div class="form-group">
 						<label for="exampleInputEamil1">Title</label>
 						 <input type="text" name='title' class="form-control" value="${board.title}">
 					</div>
 					
-					<div class="form-group" style="width: 70%;">
+					<div class="form-group">
 						<label for="exampleInputEamil1">Writer</label> 
 						<input type="text" name='nickname' class="form-control" value="${board.nickname}">
 					</div>
 					
-					<div class="form-group" style="width: 70%;">
+					<div class="form-group">
 						<label for="exampleInputPassword1">Content</label>
-						 <textarea class="form-control" name="content" rows="3">${board.content}</textarea>
+						 <textarea class="form-control" name="content" rows="7">${board.content}</textarea>
 						 <!-- <input type="text" name='content' class="form-control" style="height: 200px" value=${boardVO.content}> -->
 					</div>
 					<div class="form-group">
@@ -69,12 +69,13 @@ ul{
 				</div>
 		<!-- /.box-body -->
 	
-					<div class="box-footer">
+					<div class="box-footer" align="center">
 						<div>
 							<hr style="width:70%;margin-left:15%;">
 						</div>
 						<button type="submit" class="btn btn-primary">수정</button>
-						<button type="submit" class="btn btn-warning">취소</button>
+						<a href="/refboard/view?bno=${board.bno}"><input type="button" class="btn btn-primary" value="취소" /></a>
+						<!-- <button type="submit" class="btn btn-warning">취소</button> -->
 					</div>
 		
 	</form>
